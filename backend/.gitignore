@@ -1,0 +1,43 @@
+# === Python cache / bytecode ===
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# Byte-compiled / optimized / DLL files
+*.egg
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# === Django / DRF / JWT ===
+*.log
+db.sqlite3
+media/
+staticfiles/
+.env
+
+# Django migrations (keep __init__.py)
+*/migrations/*.py
+!*/migrations/__init__.py
+
+# === Virtual environment / uv ===
+.venv/
+.uv/
+.uv-cache/
+
+# === IDE / Editors ===
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# === OS ===
+.DS_Store
+Thumbs.db
+
+# === Misc ===
+*.pid
+*.seed
+*.pid.lock
