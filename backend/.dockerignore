@@ -1,0 +1,32 @@
+# Python/Django
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.sqlite3
+*.log
+venv/
+env/
+.venv/
+
+# Docker
+*.pid
+
+# Environment files
+.env
+.env.*
+
+# Git
+.git/
+.gitignore
+
+# Editor / IDE
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Other local files
+*.swp
+*.swo
+*.tmp
