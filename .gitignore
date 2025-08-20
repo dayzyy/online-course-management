@@ -1,0 +1,35 @@
+# -------------------
+# OS / System files
+# -------------------
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*.bak
+*.tmp
+
+# -------------------
+# Docker
+# -------------------
+*.pid
+docker-compose.override.yml
+docker-compose.override.*.yml
+**/postgres_data/
+**/db_data/
+**/tmp/
+
+# -------------------
+# IDE / editor
+# -------------------
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+*.code-workspace
+# -------------------
+# Environment files
+# -------------------
+.env
+.env.*
+.env.local
+.env.*.local
