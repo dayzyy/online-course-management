@@ -6,11 +6,11 @@ from domain.models import CustomUser
 @pytest.mark.django_db
 def test_custom_user_can_obtain_jwt_tokens():
     user = CustomUser.objects.create_user(
-        'luka@gmail.com',
-        'password123',
-        'Luka',
-        'Mania',
-        'Student'
+        email='luka@gmail.com',
+        password='password123',
+        first_name='Luka',
+        last_name='Mania',
+        role='Student'
     )
 
     path = reverse('token_obtain_pair')
@@ -25,11 +25,11 @@ def test_custom_user_can_obtain_jwt_tokens():
 @pytest.mark.django_db
 def test_custom_user_can_refresh_token():
     user = CustomUser.objects.create_user(
-        'luka@gmail.com',
-        'password123',
-        'Luka',
-        'Mania',
-        'Student'
+        email='luka@gmail.com',
+        password='password123',
+        first_name='Luka',
+        last_name='Mania',
+        role='Student'
     )
 
     path = reverse('token_obtain_pair')
