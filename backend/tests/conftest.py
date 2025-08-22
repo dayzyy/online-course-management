@@ -1,5 +1,6 @@
 import pytest
 from domain.models import CustomUser
+from rest_framework.test import APIClient
 
 _DEFAULT_USER_PASSWORD = 'password123'
 
@@ -16,3 +17,7 @@ def default_user(db) -> CustomUser:
 @pytest.fixture
 def default_user_password() -> str:
     return _DEFAULT_USER_PASSWORD
+
+@pytest.fixture()
+def api_client() -> APIClient:
+    return APIClient()
