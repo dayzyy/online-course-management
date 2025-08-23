@@ -22,4 +22,5 @@ class Course(models.Model):
     students = models.ManyToManyField(
         CustomUser,
         limit_choices_to={'role': CustomUser.Roles.STUDENT},
+        related_name='attending_courses'
     )
