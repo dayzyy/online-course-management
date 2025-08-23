@@ -43,15 +43,14 @@ def test_register_success(db, api_client: APIClient):
         ),
     ]
 )
-def test_register_fails_when_missing_fields(api_client: APIClient, user_data: dict, missing_fields: list[str]):
+def test_register_fails_when_missing_fields(db, api_client: APIClient, user_data: dict, missing_fields: list[str]):
     path = reverse("register")
     response = api_client.post(path, user_data, format="json")
 
     assert response.status_code == 400
-    assert response.data["error"] == "Validation failed"
 
     for field in missing_fields:
-        assert field in response.data["detail"]
+        assert field in response.data
 
 def test_register_fails_when_taken_email(api_client: APIClient, default_user: CustomUser):
     user_data = {
@@ -66,12 +65,11 @@ def test_register_fails_when_taken_email(api_client: APIClient, default_user: Cu
     response = api_client.post(path, user_data, format="json")
 
     assert response.status_code == 400
-    assert response.data.get("error") == f"Invalid email"
-    assert response.data.get("detail") == f"Email {default_user.email} already taken!"
+    assert "email" in response.data
 
-def test_register_fails_when_invalid_role(api_client: APIClient):
+def test_register_fails_when_invalid_role(db, api_client: APIClient):
     user_data = {
-        "email": "raskol@gmail.ru",
+        "email": "ex@gmail.ru",
         "password": "notJustAPawn123",
         "first_name": "Rodion",
         "last_name": "Raskolnikov",
@@ -82,5 +80,4 @@ def test_register_fails_when_invalid_role(api_client: APIClient):
     response = api_client.post(path, user_data, format="json")
 
     assert response.status_code == 400
-    assert response.data.get("error") == f"Invalid role"
-    assert response.data.get("detail") == f"Choose role from {CustomUser.Roles.choices}"
+    assert f"Choose role from {[r[1] for r in CustomUser.Roles.choices]}" in response.data['role']
