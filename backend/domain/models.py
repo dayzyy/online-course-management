@@ -3,5 +3,6 @@ from .course.models import Course
 from .lecture.models import Lecture
 from .homework.models import Homework
 from .submission.models import Submission
+from .grade.models import Grade
 
-__all__ = ['CustomUser', 'Course', 'Lecture', 'Homework', 'Submission']
+__all__ = ['CustomUser', 'Course', 'Lecture', 'Homework', 'Submission', 'Grade']
