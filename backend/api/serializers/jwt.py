@@ -4,7 +4,6 @@ from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 
 class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
-    print("HEREEEEEEEE")
     username_field = 'email'
 
     def validate(self, attrs):
@@ -13,11 +12,9 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
             'password': attrs.get('password')
         }
 
-        print("CREDENTIALS:", credentials)
         user = authenticate(**credentials)
 
         if user:
-            print("USER EXISTS")
             data = {}
             refresh = self.get_token(user)
 
