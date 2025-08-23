@@ -6,8 +6,8 @@ class Homework(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     due = models.DateTimeField()
 
-    lecture = models.ForeignKey(
+    lecture = models.OneToOneField(
         Lecture,
         on_delete=models.CASCADE,
-        related_name='homeworks'
+        related_name='homework'
     )
