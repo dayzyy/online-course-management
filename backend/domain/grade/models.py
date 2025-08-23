@@ -10,9 +10,11 @@ class Grade(models.Model):
         related_name='grade'
     )
 
-    grader = models.OneToOneField(
+    grader = models.ForeignKey(
         CustomUser,
+        limit_choices_to={'role': CustomUser.Roles.TEACHER},
         null=True,
         blank=False,
         on_delete=models.SET_NULL,
+        related_name='grades'
     )
