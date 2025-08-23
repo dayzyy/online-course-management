@@ -9,6 +9,7 @@ class Lecture(models.Model):
     course = models.ForeignKey(
         Course,
         on_delete=models.CASCADE,
+        related_name='lectures'
     )
 
     # Allow this field to be null, so lectures can be created at first, and then assigned a teacher at any point of time
@@ -18,5 +19,5 @@ class Lecture(models.Model):
         null=True,
         blank=True,
         on_delete=models.SET_NULL,
-        related_name='teaching_lesson'
+        related_name='teaching_lessons'
     )
