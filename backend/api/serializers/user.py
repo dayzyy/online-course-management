@@ -14,5 +14,6 @@ class RegisterUserSerializer(serializers.ModelSerializer):
         fields = '__all__'
         extra_kwargs = {
             "id": {"read_only": True},
-            "password": {"write_only": True}
+            "password": {"write_only": True},
+            "last_login": {"read_only": True}
         }
