@@ -9,7 +9,7 @@ def test_register_success(db, api_client: APIClient):
         "password": "painHealsAll123",
         "first_name": "Fyodor",
         "last_name": "Dostoevsky",
-        "role": "Teacher"
+        "role": CustomUser.Roles.TEACHER.value
     }
 
     path = reverse('register')
@@ -58,7 +58,7 @@ def test_register_fails_when_taken_email(api_client: APIClient, default_user: Cu
         "password": "painHealsAll123",
         "first_name": "Fyodor",
         "last_name": "Dostoevsky",
-        "role": "Teacher"
+        "role": CustomUser.Roles.STUDENT.value
     }
 
     path = reverse('register')

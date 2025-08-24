@@ -11,7 +11,7 @@ def default_user(db) -> CustomUser:
         password=_DEFAULT_USER_PASSWORD,
         first_name='Luka',
         last_name='Mania',
-        role='Student'
+        role=CustomUser.Roles.STUDENT.value
     )
 
 @pytest.fixture
