@@ -3,26 +3,6 @@ from django.urls import reverse
 from rest_framework.test import APIClient
 from domain.models import CustomUser, Course
 
-@pytest.fixture
-def teacher_user(db):
-    return CustomUser.objects.create_user(
-        email="teacher@example.com",
-        password="password123",
-        first_name="Teacher",
-        last_name="Example",
-        role=CustomUser.Roles.TEACHER.value
-    )
-
-@pytest.fixture
-def student_user(db):
-    return CustomUser.objects.create_user(
-        email="student@example.com",
-        password="password123",
-        first_name="Student",
-        last_name="Example",
-        role=CustomUser.Roles.STUDENT.value
-    )
-
 def test_student_cannot_delete_course(api_client: APIClient, student_user: CustomUser, teacher_user: CustomUser):
     course = Course.objects.create(
         title="Enrolled Course",

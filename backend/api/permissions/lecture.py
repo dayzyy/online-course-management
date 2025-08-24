@@ -6,7 +6,7 @@ class CanManageLecture(BasePermission):
     modify_permitted_roles = []  
 
     def has_permission(self, request, view) -> bool:
-        return any(request.user.role == role.value for role in )
+        return any(request.user.role == role.value for role in self.access_permitted_roles + self.modify_permitted_roles)
 
     def has_object_permission(self, request, view, obj: Lecture) -> bool:
         user = request.user

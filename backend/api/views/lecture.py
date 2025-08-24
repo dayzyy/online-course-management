@@ -16,10 +16,11 @@ class LectureViewSet(viewsets.ModelViewSet):
         return LectureCreateSerializer
 
     def get_permissions(self):
-        if self.action in ['list', 'retrieve']:
-            return [IsAuthenticated()]
+        perms = [IsAuthenticated()]
+        if self.action not in ['list', 'retrieve']:
+            perms.append(CanManageLecture())
 
-        return [IsAuthenticated(), CanManageLecture()]
+        return perms
 
     def get_queryset(self):
         user = self.request.user

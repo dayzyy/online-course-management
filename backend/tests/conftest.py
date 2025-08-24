@@ -21,3 +21,23 @@ def default_user_password() -> str:
 @pytest.fixture()
 def api_client() -> APIClient:
     return APIClient()
+
+@pytest.fixture
+def teacher_user(db):
+    return CustomUser.objects.create_user(
+        email="teacher@example.com",
+        password="password123",
+        first_name="Teacher",
+        last_name="Example",
+        role=CustomUser.Roles.TEACHER.value
+    )
+
+@pytest.fixture
+def student_user(db):
+    return CustomUser.objects.create_user(
+        email="student@example.com",
+        password="password123",
+        first_name="Student",
+        last_name="Example",
+        role=CustomUser.Roles.STUDENT.value
+    )
