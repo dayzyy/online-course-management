@@ -1,8 +1,13 @@
 from django.urls import path
 from rest_framework_simplejwt.views import TokenRefreshView
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
+from rest_framework.routers import DefaultRouter
 from .views.jwt import CustomTokenObtainPairView
 from .views.user import Register
+from .views.course import CourseViewSet
+
+router = DefaultRouter()
+router.register(r'courses', CourseViewSet, basename='course')
 
 urlpatterns = [
     path('token/obtain/', CustomTokenObtainPairView.as_view(), name='token_obtain_pair'),

@@ -2,7 +2,7 @@ from rest_framework import serializers
 from domain.models import Course, CustomUser
 from .user import UserInfoSerializer
 
-class CourseInfoSerialzer(serializers.ModelSerializer):
+class CourseInfoSerializer(serializers.ModelSerializer):
     lead = UserInfoSerializer(read_only=True)
     teachers = UserInfoSerializer(many=True, read_only=True)
     students = UserInfoSerializer(many=True, read_only=True)
