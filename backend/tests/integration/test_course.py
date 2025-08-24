@@ -23,16 +23,10 @@ def student_user(db):
         role=CustomUser.Roles.STUDENT.value
     )
 
-def test_student_cannot_delete_course(api_client: APIClient, student_user: CustomUser):
+def test_student_cannot_delete_course(api_client: APIClient, student_user: CustomUser, teacher_user: CustomUser):
     course = Course.objects.create(
         title="Enrolled Course",
-        lead=CustomUser.objects.create_user(
-            email="teacher@test.com",
-            password="pass123",
-            first_name="Teacher",
-            last_name="Test",
-            role=CustomUser.Roles.TEACHER.value
-        )
+        lead=teacher_user
     )
     course.students.add(student_user)
 
