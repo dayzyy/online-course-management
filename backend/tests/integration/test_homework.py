@@ -1,7 +1,31 @@
 import pytest
 from django.urls import reverse
+from django.utils import timezone
+from datetime import timedelta
 from rest_framework.test import APIClient
-from domain.models import CustomUser, Homework
+from domain.models import CustomUser, Homework, Lecture
+
+def test_teacher_can_create_homework(api_client: APIClient, lecture: Lecture):
+    api_client.force_authenticate(user=lecture.teacher)
+    url = reverse("homework-list")
+
+    data = {
+        "content": "New Homework",
+        "lecture": lecture.id,
+        "due": (timezone.now() + timedelta(days=7)).isoformat()
+    }
+
+    response = api_client.post(url, data, format='json')
+
+    print(response.status_code)
+    print(response.data)
+
+    assert response.status_code == 201
+
+    homework = Homework.objects.get(content="New Homework")
+    assert homework.lecture == lecture
+    assert response.data["content"] == data["content"]
+    assert response.data["lecture"] == data["lecture"]
 
 def test_student_can_list_their_homeworks(api_client: APIClient, student_user: CustomUser, homework: Homework):
     homework.lecture.course.students.add(student_user)

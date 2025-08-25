@@ -12,9 +12,8 @@ class CourseInfoSerializer(serializers.ModelSerializer):
         fields = ['id', 'title', 'description', 'created_at', 'lead', 'teachers', 'students']
 
 class CourseCreateSerializer(serializers.ModelSerializer):
-    lead = serializers.PrimaryKeyRelatedField(
-        queryset=CustomUser.objects.filter(role=CustomUser.Roles.TEACHER.value)
-    )
+    lead = UserInfoSerializer(read_only=True)
+    
     teachers = serializers.PrimaryKeyRelatedField(
         queryset=CustomUser.objects.filter(role=CustomUser.Roles.TEACHER.value),
         many=True,

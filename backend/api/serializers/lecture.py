@@ -1,9 +1,10 @@
 from rest_framework import serializers
 from domain.models import Lecture, CustomUser
 from .user import UserInfoSerializer
+from .course import CourseInfoSerializer
 
 class LectureInfoSerializer(serializers.ModelSerializer):
-    course = serializers.StringRelatedField(read_only=True)
+    course = CourseInfoSerializer(read_only=True)
     teacher = UserInfoSerializer(read_only=True)
 
     class Meta:

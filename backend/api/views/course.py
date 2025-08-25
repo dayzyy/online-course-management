@@ -35,10 +35,7 @@ class CourseViewSet(viewsets.ModelViewSet):
 
             return qs.filter(Q(lead=user) | Q(teachers=user)).distinct()
 
-        # Students can optionally see all courses
         if user.role == CustomUser.Roles.STUDENT.value:
-            if self.request.query_params.get('all') == 'true':
-                return qs
             return qs.filter(students=user)
 
         return qs
@@ -52,13 +49,10 @@ class CourseViewSet(viewsets.ModelViewSet):
                 type=str,
                 enum=['lead', 'teaching']
             ),
-            OpenApiParameter(
-                name='all',
-                description='For students: show all courses instead of only enrolled ones',
-                required=False,
-                type=bool
-            )
         ]
     )
     def list(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)
+
+    def perform_create(self, serializer):
+        serializer.save(lead=self.request.user)
