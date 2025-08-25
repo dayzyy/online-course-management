@@ -4,7 +4,7 @@ from domain.models import CustomUser
 class UserInfoSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
-        fields = ['email', 'first_name', 'last_name']
+        fields = ['id', 'email', 'first_name', 'last_name']
 
 class RegisterUserSerializer(serializers.ModelSerializer):
     role = serializers.ChoiceField(

@@ -11,7 +11,8 @@ class HomeworkInfoSerializer(serializers.ModelSerializer):
 class HomeworkCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Homework
-        fields = ["content", "due", "lecture"]
+        fields = ["id", "content", "due", "lecture"]
         extra_kwargs = {
-            "lecture": {"write_only": True}
+            "lecture": {"write_only": True},
+            "id": {"read_only": True}
         }

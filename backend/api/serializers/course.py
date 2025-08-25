@@ -9,8 +9,7 @@ class CourseInfoSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Course
-        fields = ['title', 'description', 'created_at', 'lead', 'teachers', 'students']
-
+        fields = ['id', 'title', 'description', 'created_at', 'lead', 'teachers', 'students']
 
 class CourseCreateSerializer(serializers.ModelSerializer):
     lead = serializers.PrimaryKeyRelatedField(
@@ -29,4 +28,5 @@ class CourseCreateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Course
-        fields = ['title', 'description', 'lead', 'teachers', 'students']
+        fields = ['id', 'title', 'description', 'lead', 'teachers', 'students']
+        extra_kwargs = {"id": {"read_only": True}}

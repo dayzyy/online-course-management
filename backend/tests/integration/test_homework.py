@@ -1,25 +1,10 @@
 import pytest
 from django.urls import reverse
-from django.utils import timezone
 from rest_framework.test import APIClient
-from domain.models import CustomUser, Course, Lecture, Homework
+from domain.models import CustomUser, Homework
 
-
-def test_student_can_list_their_homeworks(api_client: APIClient, student_user: CustomUser, teacher_user: CustomUser):
-    course = Course.objects.create(title="Test Course", lead=teacher_user)
-    course.students.add(student_user)
-
-    lecture = Lecture.objects.create(
-        topic="Lecture 1",
-        course=course,
-        teacher=teacher_user,
-        held_at=timezone.now()
-    )
-    Homework.objects.create(
-        content="Homework 1",
-        lecture=lecture,
-        due=timezone.now() + timezone.timedelta(days=7)
-    )
+def test_student_can_list_their_homeworks(api_client: APIClient, student_user: CustomUser, homework: Homework):
+    homework.lecture.course.students.add(student_user)
 
     api_client.force_authenticate(user=student_user)
     url = reverse("homework-list")
@@ -27,44 +12,18 @@ def test_student_can_list_their_homeworks(api_client: APIClient, student_user: C
 
     assert response.status_code == 200
 
-    contents = [h["content"] for h in response.data]
-    assert "Homework 1" in contents
+    hw_ids = [h["id"] for h in response.data]
+    assert hw_ids == [homework.id]
 
-def test_student_cannot_modify_homework(api_client: APIClient, student_user: CustomUser, teacher_user: CustomUser):
-    course = Course.objects.create(title="Test Course", lead=teacher_user)
-    lecture = Lecture.objects.create(
-        topic="Lecture 1",
-        course=course,
-        teacher=teacher_user,
-        held_at=timezone.now()
-    )
-    homework = Homework.objects.create(
-        content="Homework 1",
-        lecture=lecture,
-        due=timezone.now() + timezone.timedelta(days=7)
-    )
-
+def test_student_cannot_modify_homework(api_client: APIClient, student_user: CustomUser, homework: Homework):
     api_client.force_authenticate(user=student_user)
     url = reverse("homework-detail", args=[homework.id])
     response = api_client.delete(url)
 
     assert response.status_code == 403
 
-def test_teacher_can_modify_their_homework(api_client: APIClient, teacher_user: CustomUser):
-    course = Course.objects.create(title="Test Course", lead=teacher_user)
-    lecture = Lecture.objects.create(
-        topic="Lecture 1",
-        course=course,
-        teacher=teacher_user,
-        held_at=timezone.now()
-    )
-    homework = Homework.objects.create(
-        content="Homework 1",
-        lecture=lecture,
-        due=timezone.now() + timezone.timedelta(days=7)
-    )
-
-    api_client.force_authenticate(user=teacher_user)
+def test_teacher_can_modify_their_homework(api_client: APIClient, homework: Homework):
+    api_client.force_authenticate(user=homework.lecture.teacher)
     url = reverse("homework-detail", args=[homework.id])
     response = api_client.patch(url, {"content": "Updated Homework"}, format="json")
 
@@ -73,7 +32,7 @@ def test_teacher_can_modify_their_homework(api_client: APIClient, teacher_user: 
     homework.refresh_from_db()
     assert homework.content == "Updated Homework"
 
-def test_teacher_cannot_modify_other_teacher_homework(api_client: APIClient, teacher_user: CustomUser):
+def test_teacher_cannot_modify_other_teacher_homework(api_client: APIClient, homework: Homework):
     other_teacher = CustomUser.objects.create_user(
         email="other_teacher@test.com",
         password="password123",
@@ -82,21 +41,26 @@ def test_teacher_cannot_modify_other_teacher_homework(api_client: APIClient, tea
         role=CustomUser.Roles.TEACHER.value
     )
 
-    course = Course.objects.create(title="Other Course", lead=other_teacher)
-    lecture = Lecture.objects.create(
-        topic="Other Lecture",
-        course=course,
-        teacher=other_teacher,
-        held_at=timezone.now()
-    )
-    homework = Homework.objects.create(
-        content="Other Homework",
-        lecture=lecture,
-        due=timezone.now() + timezone.timedelta(days=7)
-    )
-
-    api_client.force_authenticate(user=teacher_user)
+    api_client.force_authenticate(user=other_teacher)
     url = reverse("homework-detail", args=[homework.id])
     response = api_client.patch(url, {"content": "Hacked Homework"}, format="json")
 
     assert response.status_code in (403, 404)
+
+def test_teacher_can_filter_homework_by_lecture(api_client: APIClient, homework: Homework):
+    api_client.force_authenticate(user=homework.lecture.teacher)
+    url = reverse("homework-list")
+    response = api_client.get(url, {"lecture": homework.lecture.id})
+
+    assert response.status_code == 200
+    assert len(response.data) == 1
+    assert response.data[0]["id"] == homework.id
+
+def test_student_cannot_filter_homework_for_unenrolled_lecture(api_client, student_user, homework: Homework):
+    api_client.force_authenticate(user=student_user)
+    url = reverse("homework-list")
+    response = api_client.get(url, {"lecture": homework.lecture.id})
+
+    assert response.status_code == 200
+    # student is not enrolled in course -> should see nothing
+    assert len(response.data) == 0

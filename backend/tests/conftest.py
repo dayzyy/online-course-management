@@ -1,6 +1,7 @@
 import pytest
-from domain.models import CustomUser
+from domain.models import CustomUser, Course, Lecture, Homework
 from rest_framework.test import APIClient
+from django.utils import timezone
 
 _DEFAULT_USER_PASSWORD = 'password123'
 
@@ -40,4 +41,28 @@ def student_user(db):
         first_name="Student",
         last_name="Example",
         role=CustomUser.Roles.STUDENT.value
+    )
+
+@pytest.fixture
+def course(teacher_user: CustomUser):
+    return Course.objects.create(
+        title="Premade course",
+        lead=teacher_user
+    )
+
+@pytest.fixture
+def lecture(teacher_user: CustomUser, course: Course):
+    return Lecture.objects.create(
+        topic="Lecture 1",
+        course=course,
+        teacher=teacher_user,
+        held_at=timezone.now()
+    )
+
+@pytest.fixture
+def homework(lecture: Lecture):
+    return Homework.objects.create(
+        content="Homework 1",
+        lecture=lecture,
+        due=timezone.now() + timezone.timedelta(days=7)
     )
