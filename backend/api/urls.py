@@ -8,12 +8,14 @@ from .views.course import CourseViewSet
 from .views.lecture import LectureViewSet
 from .views.homework import HomeworkViewSet
 from .views.submission import SubmissionViewSet
+from .views.grade import GradeViewSet
 
 router = DefaultRouter()
 router.register(r'courses', CourseViewSet, basename='course')
 router.register(r'lectures', LectureViewSet, basename='lecture')
 router.register(r'homeworks', HomeworkViewSet, basename='homework')
 router.register(r'submissions', SubmissionViewSet, basename='submission')
+router.register(r'grades', GradeViewSet, basename='grade')
 
 urlpatterns = [
     path('token/obtain/', CustomTokenObtainPairView.as_view(), name='token_obtain_pair'),
