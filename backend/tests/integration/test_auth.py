@@ -1,3 +1,4 @@
+import pytest
 from django.urls import reverse
 from domain.models import CustomUser
 from rest_framework.test import APIClient

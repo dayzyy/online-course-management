@@ -18,7 +18,7 @@ def test_teacher_can_create_course(api_client: APIClient, teacher_user: CustomUs
     
     assert response.status_code == 201
     assert Course.objects.filter(title=data["title"], lead=teacher_user).exists()
-    assert response.data["title"] == "New Course"
+    assert response.data["title"] == data["title"]
     assert response.data["lead"]["id"] == teacher_user.id
 
 def test_student_cannot_delete_course(api_client: APIClient, student_user: CustomUser, course: Course):
