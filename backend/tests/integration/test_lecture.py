@@ -5,7 +5,6 @@ from django.utils import timezone
 from rest_framework.test import APIClient
 from domain.models import CustomUser, Lecture, Course
 
-@pytest.mark.skip
 def test_teacher_can_create_lecture(api_client: APIClient,  teacher_user: CustomUser, course: Course):
     api_client.force_authenticate(user=teacher_user)
     url = reverse("lecture-list")

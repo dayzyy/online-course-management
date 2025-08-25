@@ -1,5 +1,3 @@
-version: "3.9"
-
 services:
   db:
     build:
@@ -30,8 +28,10 @@ services:
     volumes:
       - ./backend:/usr/local/app
       - /usr/local/app/.venv
+      - media_data:/usr/local/app/media
     depends_on:
       - db
 
 volumes:
   postgres_data:
+  media_data:

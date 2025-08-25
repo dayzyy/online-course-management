@@ -3,7 +3,7 @@ from domain.models import Course, CustomUser
 
 class Lecture(models.Model):
     topic = models.CharField(max_length=255)
-    presentation = models.FileField()
+    presentation = models.FileField(upload_to='course_materials/')
     held_at = models.DateTimeField()
 
     course = models.ForeignKey(

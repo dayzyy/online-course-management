@@ -3,7 +3,7 @@ from domain.models import Homework, CustomUser
 
 class Submission(models.Model):
     content = models.TextField()
-    attachment = models.FileField(null=True, blank=True)
+    attachment = models.FileField(null=True, blank=True, upload_to='course_submissions/')
 
     homework = models.ForeignKey(
         Homework,
