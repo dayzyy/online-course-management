@@ -11,7 +11,7 @@ class Submission(models.Model):
         related_name='submissions'
     )
 
-    student = models.ForeignKey(
+    author = models.ForeignKey(
         CustomUser,
         on_delete=models.CASCADE,
         limit_choices_to={'role': CustomUser.Roles.STUDENT},
