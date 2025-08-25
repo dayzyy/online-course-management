@@ -1,5 +1,5 @@
 from django.db import models
-from domain.models import Homework, CustomUser
+from domain.models import Grade, CustomUser
 
 class Comment(models.Model):
     class Meta:
@@ -15,9 +15,9 @@ class Comment(models.Model):
         related_name='comments'
     )
 
-class HomeworkComment(Comment):
+class GradeComment(Comment):
     homework = models.ForeignKey(
-        Homework,
+        Grade,
         on_delete=models.CASCADE,
         related_name='comments'
     )
