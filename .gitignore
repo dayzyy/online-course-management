@@ -34,5 +34,5 @@ docker-compose.override.*.yml
 .env.local
 .env.*.local
 
-# MEdia
+# Media
 /media/
