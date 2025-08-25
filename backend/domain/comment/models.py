@@ -16,7 +16,7 @@ class Comment(models.Model):
     )
 
 class GradeComment(Comment):
-    homework = models.ForeignKey(
+    grade = models.ForeignKey(
         Grade,
         on_delete=models.CASCADE,
         related_name='comments'
