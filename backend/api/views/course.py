@@ -1,7 +1,9 @@
-from rest_framework import viewsets
+from rest_framework import viewsets, status
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.decorators import action
 from drf_spectacular.utils import extend_schema, OpenApiParameter
 from django.db.models import Q
+from rest_framework.views import Response
 from domain.models import Course, CustomUser
 from api.serializers.course import CourseInfoSerializer, CourseCreateSerializer
 from api.permissions.course import CanManageCourse
@@ -56,3 +58,36 @@ class CourseViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(lead=self.request.user)
+
+    @action(detail=True, methods=['POST'], url_path='add-members')
+    def add_members(self, request, pk=None):
+        course = self.get_object()
+        teacher_ids = request.data.get("teachers", [])
+        student_ids = request.data.get("students", [])
+
+        if teacher_ids:
+            teachers = CustomUser.objects.filter(id__in=teacher_ids)
+            course.teachers.add(*teachers)
+
+        if student_ids:
+            students = CustomUser.objects.filter(id__in=student_ids)
+            course.students.add(*students)
+
+        return Response({"detail": "Members added successfully"}, status=status.HTTP_200_OK)
+
+    @action(detail=True, methods=['POST'], url_path='remove-members')
+    def remove_members(self, request, pk=None):
+        course = self.get_object()
+
+        teacher_ids = request.data.get("teachers", [])
+        student_ids = request.data.get("students", [])
+
+        if teacher_ids:
+            teachers = CustomUser.objects.filter(id__in=teacher_ids)
+            course.teachers.remove(*teachers)
+
+        if student_ids:
+            students = CustomUser.objects.filter(id__in=student_ids)
+            course.students.remove(*students)
+
+        return Response({"detail": "Members removed successfully"}, status=status.HTTP_200_OK)

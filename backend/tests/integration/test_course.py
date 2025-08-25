@@ -103,3 +103,40 @@ def test_student_sees_only_enrolled_courses(api_client: APIClient, student_user:
 
     course_ids = [c["id"] for c in response.data]
     assert course_ids == [enrolled_course.id]
+
+def test_teacher_can_add_members(api_client: APIClient, teacher_user: CustomUser, student_user: CustomUser, course: Course):
+    api_client.force_authenticate(user=teacher_user)
+    url = reverse("course-add-members", args=[course.id])
+
+    data = {
+        "teachers": [teacher_user.id],
+        "students": [student_user.id],
+    }
+
+    print(data)
+
+    response = api_client.post(url, data, format="json")
+
+    assert response.status_code == 200
+    assert teacher_user in course.teachers.all()
+    assert student_user in course.students.all()
+    assert response.data["detail"] == "Members added successfully"
+
+def test_teacher_can_remove_members(api_client: APIClient, teacher_user: CustomUser, student_user: CustomUser, course: Course):
+    course.teachers.add(teacher_user)
+    course.students.add(student_user)
+
+    api_client.force_authenticate(user=teacher_user)
+    url = reverse("course-remove-members", args=[course.id])
+
+    data = {
+        "teachers": [teacher_user.id],
+        "students": [student_user.id],
+    }
+
+    response = api_client.post(url, data, format="json")
+
+    assert response.status_code == 200
+    assert teacher_user not in course.teachers.all()
+    assert student_user not in course.students.all()
+    assert response.data["detail"] == "Members removed successfully"
