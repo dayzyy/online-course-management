@@ -1,10 +1,9 @@
-from rest_framework.permissions import BasePermission
+from .base import UserRoleBasedPermission
 from domain.models import CustomUser, Submission
 from django.utils import timezone
 
-class CanManageSubmission(BasePermission):
+class CanManageSubmission(UserRoleBasedPermission):
     access_permitted_roles: list[CustomUser.Roles] = [CustomUser.Roles.STUDENT, CustomUser.Roles.TEACHER]
-    modify_permitted_roles: list[CustomUser.Roles] = []
 
     def has_permission(self, request, view) -> bool:
         return any(request.user.role == role.value for role in self.access_permitted_roles + self.modify_permitted_roles)
@@ -22,4 +21,4 @@ class CanManageSubmission(BasePermission):
         if user == lecture.course.lead:
             return True
 
-        return any(user.role == role.value for role in self.modify_permitted_roles)
+        return super().has_object_permission(request, view, obj)
