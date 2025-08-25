@@ -1,5 +1,5 @@
 import pytest
-from domain.models import CustomUser, Course, Lecture, Homework, Submission
+from domain.models import CustomUser, Course, Lecture, Homework, Submission, Grade
 from rest_framework.test import APIClient
 from django.utils import timezone
 
@@ -73,4 +73,12 @@ def submission(homework: Homework, student_user: CustomUser):
         content="Answer 1",
         homework=homework,
         author=student_user
+    )
+
+@pytest.fixture
+def grade(homework: Homework):
+    return Grade.objects.create(
+        value=100,
+        homework=homework,
+        grader=homework.lecture.teacher
     )
